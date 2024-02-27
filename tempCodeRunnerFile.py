@@ -1,2 +1,2 @@
-    print(np.trace(B-np.matmul(B,B)))
-    print(np.trace(B_pure-np.matmul(B_pure,B_pure)))
+    print("Diagonal almost idempotent matrix in its own basis set:")
+    print(P_1_diag)
