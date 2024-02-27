@@ -1,5 +1,7 @@
 import numpy as np
 import random as rand
+from scipy.stats import unitary_group
+from scipy.stats import ortho_group
 
 
 np.printoptions(precision=3, suppress=True)
@@ -25,13 +27,24 @@ def near_idempotent(N,size):
             visited.append(temp_1)
             visited.append(temp_2)
             i+=1
+    random_matrix=np.random.rand(size,size)
+    eigenvalues,eigenvectors=np.linalg.eig(random_matrix)
+    rum=ortho_group.rvs(size)
+
+    with np.printoptions(precision=3, suppress=True):
+        print(np.matmul(rum.conj().T,rum))
+        print(np.trace(np.matmul(rum.conj().T,np.matmul(B,rum))))
+
+
     return B
-N=10
+N=6
 size=2*N
 
 
 A=np.identity(size)
 B=near_idempotent(N,size)
+
+
 
 print(np.trace(B-np.matmul(B,B)))
 
@@ -39,5 +52,3 @@ B_pure=purification(B)
 
 print(np.trace(B_pure-np.matmul(B_pure,B_pure)))
 
-# with :
-#     print(B_pure)
