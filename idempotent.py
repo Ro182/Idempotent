@@ -15,7 +15,7 @@ def unitary_matrix(size):
 
 
 
-def purification(matrix,max_iterations=5 ,precision=1e-6):
+def purification(matrix,max_iterations=10 ,precision=1e-14):
     """This function takes a almost idempotent matrix P and through McWeeny purification, 
     creates a idempotent matrix P'. It uses the next mapping:
     P'=3PP-2PP
@@ -70,7 +70,7 @@ def near_idempotent(N,size,mixing_val=0.2):
 
 
 
-N=8
+N=5
 size=2*N
 
 print("Size of the matrix: %i x %i, Number of electrons:%i"%(size,size,N))
@@ -83,17 +83,18 @@ print("Matrix purification")
 P_1_pure=purification(P_1)
 
 print("Purified matrix:\n",P_1_pure)
-print("Diference between the matrices\n",P_1-P_1_pure)
+Difference_matrix=P_1-P_1_pure
+print("Diference between the matrices\n",Difference_matrix)
 print("Maximun absolute difference: %f"%np.max(abs(P_1-P_1_pure)))
 
 print("Trace of almost idempotent matrix %f"%np.trace(P_1))
 print("Trace purifie matrix %f"%np.trace(P_1_pure))
 
 
-#eigenvals,eigenvals_i,eigenvectors,eigenvectors_i,_=lapack.dgeev(P_1_pure)
+eigenvals,eigenvectors,_=lapack.dsyev(P_1_pure)
 
 #eigenvals,eigenvectors=np.linalg.eig(P_1_pure)
-eigenvals,eigenvectors=scp.linalg.eig(P_1_pure)
+#eigenvals,eigenvectors=scp.linalg.eigh(P_1_pure)
 
 
 P_1_in_new_base=np.matmul(eigenvectors.conj().T,np.matmul(P_1,eigenvectors,dtype=np.float64),dtype=np.float64)
@@ -101,15 +102,14 @@ P_1_in_new_base=np.matmul(eigenvectors.conj().T,np.matmul(P_1,eigenvectors,dtype
 
     
 print("Eigenvalues of the almost idempotent matrix in the purified matrix based and trace:\n",np.sort(P_1_in_new_base.diagonal()),np.trace(P_1_in_new_base))
-print("Eigenvalues of the almost idempotent matrix and trace:\n",np.sort(P_1_diag.diagonal()),np.trace(P_1_diag))
+print("Eigenvalues of the almost idempotent matrix and trace in diagonal form:\n",np.sort(P_1_diag.diagonal()),np.trace(P_1_diag))
+
 
 print("Almost idempotent matrix in the purified matrix basis set:")
 print(P_1_in_new_base)
 
 print("Diagonalized Purified matrix:")
 print(np.matmul(eigenvectors.conj().T,np.matmul(P_1_pure,eigenvectors,dtype=np.float64),dtype=np.float64))
-
-
 
 
 
